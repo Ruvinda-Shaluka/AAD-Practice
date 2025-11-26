@@ -1,0 +1,515 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Customer Management System</title>
+    <style>
+        /* Modern Dark Theme */
+        :root {
+            --primary: #4CAF50;
+            --primary-dark: #45a049;
+            --secondary: #ff9800;
+            --danger: #f44336;
+            --dark-bg: #1e1e1e;
+            --container-bg: #2d2d2d;
+            --input-bg: #3a3a3a;
+            --border: #444444;
+            --text: #f0f0f0;
+            --text-muted: #cccccc;
+        }
+
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        body {
+            background: linear-gradient(135deg, var(--dark-bg) 0%, #2c2c2c 100%);
+            color: var(--text);
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+            line-height: 1.6;
+            min-height: 100vh;
+            padding: 20px;
+        }
+
+        .container {
+            max-width: 1200px;
+            margin: 0 auto;
+        }
+
+        header {
+            text-align: center;
+            margin-bottom: 40px;
+            padding: 20px;
+        }
+
+        h1 {
+            color: var(--primary);
+            font-size: 2.5rem;
+            margin-bottom: 10px;
+        }
+
+        .subtitle {
+            color: var(--text-muted);
+            font-size: 1.1rem;
+        }
+
+        .main-content {
+            display: grid;
+            grid-template-columns: 1fr 1fr;
+            gap: 30px;
+            margin-bottom: 30px;
+        }
+
+        @media (max-width: 768px) {
+            .main-content {
+                grid-template-columns: 1fr;
+            }
+        }
+
+        .card {
+            background: var(--container-bg);
+            border-radius: 12px;
+            padding: 30px;
+            box-shadow: 0 8px 32px rgba(0, 0, 0, 0.3);
+            border: 1px solid var(--border);
+        }
+
+        .form-section h2,
+        .actions-section h2,
+        .response-section h2 {
+            color: var(--primary);
+            margin-bottom: 25px;
+            font-size: 1.5rem;
+            border-bottom: 2px solid var(--primary);
+            padding-bottom: 10px;
+        }
+
+        .form-group {
+            margin-bottom: 20px;
+        }
+
+        label {
+            display: block;
+            margin-bottom: 8px;
+            font-weight: 600;
+            color: var(--text-muted);
+        }
+
+        input[type="text"],
+        input[type="number"],
+        textarea,
+        select {
+            width: 100%;
+            padding: 12px 15px;
+            border: 1px solid var(--border);
+            border-radius: 8px;
+            background: var(--input-bg);
+            color: var(--text);
+            font-size: 14px;
+            transition: all 0.3s ease;
+        }
+
+        input:focus,
+        textarea:focus,
+        select:focus {
+            border-color: var(--primary);
+            outline: none;
+            box-shadow: 0 0 0 3px rgba(76, 175, 80, 0.2);
+            transform: translateY(-2px);
+        }
+
+        textarea {
+            resize: vertical;
+            min-height: 100px;
+        }
+
+        .btn-group {
+            display: flex;
+            gap: 10px;
+            flex-wrap: wrap;
+        }
+
+        .btn {
+            flex: 1;
+            padding: 12px 20px;
+            border: none;
+            border-radius: 8px;
+            cursor: pointer;
+            font-size: 14px;
+            font-weight: 600;
+            transition: all 0.3s ease;
+            text-align: center;
+            min-width: 120px;
+        }
+
+        .btn-primary {
+            background: var(--primary);
+            color: white;
+        }
+
+        .btn-primary:hover {
+            background: var(--primary-dark);
+            transform: translateY(-2px);
+            box-shadow: 0 4px 12px rgba(76, 175, 80, 0.3);
+        }
+
+        .btn-secondary {
+            background: var(--secondary);
+            color: white;
+        }
+
+        .btn-secondary:hover {
+            background: #e68900;
+            transform: translateY(-2px);
+            box-shadow: 0 4px 12px rgba(255, 152, 0, 0.3);
+        }
+
+        .btn-danger {
+            background: var(--danger);
+            color: white;
+        }
+
+        .btn-danger:hover {
+            background: #d32f2f;
+            transform: translateY(-2px);
+            box-shadow: 0 4px 12px rgba(244, 67, 54, 0.3);
+        }
+
+        .btn:active {
+            transform: translateY(0);
+        }
+
+        .response-section {
+            grid-column: 1 / -1;
+        }
+
+        .response-box {
+            background: var(--input-bg);
+            border: 1px solid var(--border);
+            border-radius: 8px;
+            padding: 20px;
+            min-height: 150px;
+            max-height: 300px;
+            overflow-y: auto;
+            margin-top: 10px;
+            white-space: pre-wrap;
+            font-family: 'Courier New', monospace;
+            font-size: 14px;
+        }
+
+        .response-box.success {
+            border-left: 4px solid var(--primary);
+        }
+
+        .response-box.error {
+            border-left: 4px solid var(--danger);
+        }
+
+        .notification {
+            position: fixed;
+            top: 20px;
+            right: 20px;
+            padding: 15px 20px;
+            border-radius: 8px;
+            color: white;
+            font-weight: 600;
+            z-index: 1000;
+            transform: translateX(400px);
+            transition: transform 0.3s ease;
+        }
+
+        .notification.show {
+            transform: translateX(0);
+        }
+
+        .notification.success {
+            background: var(--primary);
+        }
+
+        .notification.error {
+            background: var(--danger);
+        }
+
+        .action-controls {
+            display: grid;
+            grid-template-columns: 1fr 1fr;
+            gap: 15px;
+            margin-bottom: 20px;
+        }
+
+        @media (max-width: 480px) {
+            .action-controls {
+                grid-template-columns: 1fr;
+            }
+        }
+
+        .loading {
+            opacity: 0.7;
+            pointer-events: none;
+        }
+
+        .loading::after {
+            content: '...';
+            animation: loading 1.5s infinite;
+        }
+
+        @keyframes loading {
+            0%, 33% { content: '.'; }
+            34%, 66% { content: '..'; }
+            67%, 100% { content: '...'; }
+        }
+    </style>
+</head>
+<body>
+<div class="container">
+    <header>
+        <h1>Customer Management System</h1>
+        <p class="subtitle">Manage your customer data with ease</p>
+    </header>
+
+    <div class="main-content">
+        <div class="card form-section">
+            <h2>Customer Information</h2>
+            <div class="form-group">
+                <label for="id">Customer ID</label>
+                <input type="number" id="id" name="id" placeholder="Enter unique customer ID" required>
+            </div>
+
+            <div class="form-group">
+                <label for="name">Full Name</label>
+                <input type="text" id="name" name="name" placeholder="Enter customer's full name" required>
+            </div>
+
+            <div class="form-group">
+                <label for="address">Address</label>
+                <textarea id="address" name="address" placeholder="Enter customer's complete address" required></textarea>
+            </div>
+
+            <div class="btn-group">
+                <button type="button" class="btn btn-primary" onclick="addCustomer()">Add Customer</button>
+                <button type="button" class="btn btn-secondary" onclick="updateCustomer()">Update Customer</button>
+            </div>
+        </div>
+
+        <div class="card actions-section">
+            <h2>Customer Actions</h2>
+
+            <div class="action-controls">
+                <div class="form-group">
+                    <label for="searchId">Search by ID</label>
+                    <input type="number" id="searchId" name="searchId" placeholder="Enter customer ID">
+                </div>
+                <button type="button" class="btn btn-secondary" onclick="getCustomer()" style="align-self: end;">Get Customer</button>
+            </div>
+
+            <div class="action-controls">
+                <div class="form-group">
+                    <label for="deleteId">Delete by ID</label>
+                    <input type="number" id="deleteId" name="deleteId" placeholder="Enter customer ID">
+                </div>
+                <button type="button" class="btn btn-danger" onclick="deleteCustomer()" style="align-self: end;">Delete Customer</button>
+            </div>
+
+            <button type="button" class="btn btn-primary" onclick="getAllCustomers()">Get All Customers</button>
+        </div>
+
+        <div class="card response-section">
+            <h2>System Response</h2>
+            <div class="response-box" id="responseBox">
+                Welcome to Customer Management System. Your responses will appear here.
+            </div>
+        </div>
+    </div>
+</div>
+
+<div id="notification" class="notification"></div>
+
+<script src="https://cdnjs.cloudflare.com/ajax/libs/jquery/3.7.1/jquery.min.js"></script>
+<script>
+    const baseUrl = 'http://localhost:8080/Day_02_Application_war_exploded/customer';
+
+    function showNotification(message, type = 'success') {
+        const notification = $('#notification');
+        notification.removeClass('success error').addClass(type).text(message).addClass('show');
+        setTimeout(() => notification.removeClass('show'), 3000);
+    }
+
+    function setResponse(message, isError = false) {
+        const responseBox = $('#responseBox');
+        responseBox.removeClass('success error').addClass(isError ? 'error' : 'success');
+        responseBox.text(message);
+    }
+
+    function setLoading(selector) {
+        $(selector).addClass('loading');
+    }
+
+    function removeLoading(selector) {
+        $(selector).removeClass('loading');
+    }
+
+    function addCustomer() {
+        const id = $('#id').val();
+        const name = $('#name').val();
+        const address = $('#address').val();
+
+        if (!id || !name || !address) {
+            showNotification('Please fill all fields', 'error');
+            return;
+        }
+
+        setLoading('.btn-primary');
+
+        $.ajax({
+            url: `${baseUrl}?id=${id}&name=${encodeURIComponent(name)}&address=${encodeURIComponent(address)}`,
+            method: "POST",
+            success: function(responseText) {
+                setResponse(`Customer Added Successfully!\n\nResponse: ${responseText}`);
+                showNotification('Customer added successfully!');
+                clearForm();
+            },
+            error: function(xhr) {
+                const errorMsg = xhr.responseText || 'Failed to add customer';
+                setResponse(`Error: ${errorMsg}`, true);
+                showNotification('Failed to add customer', 'error');
+            },
+            complete: function() {
+                removeLoading('.btn-primary');
+            }
+        });
+    }
+
+    function updateCustomer() {
+        const id = $('#id').val();
+        const name = $('#name').val();
+        const address = $('#address').val();
+
+        if (!id) {
+            showNotification('Customer ID is required for update', 'error');
+            return;
+        }
+
+        if (!name && !address) {
+            showNotification('Please provide at least name or address to update', 'error');
+            return;
+        }
+
+        setLoading('.btn-secondary');
+
+        $.ajax({
+            url: `${baseUrl}?id=${id}&name=${encodeURIComponent(name)}&address=${encodeURIComponent(address)}`,
+            method: "PUT",
+            success: function(responseText) {
+                setResponse(`Customer Updated Successfully!\n\nResponse: ${responseText}`);
+                showNotification('Customer updated successfully!');
+                clearForm();
+            },
+            error: function(xhr) {
+                const errorMsg = xhr.responseText || 'Failed to update customer';
+                setResponse(`Error: ${errorMsg}`, true);
+                showNotification('Failed to update customer', 'error');
+            },
+            complete: function() {
+                removeLoading('.btn-secondary');
+            }
+        });
+    }
+
+    function deleteCustomer() {
+        const id = $('#deleteId').val();
+
+        if (!id) {
+            showNotification('Please enter Customer ID to delete', 'error');
+            return;
+        }
+
+        setLoading('.btn-danger');
+
+        $.ajax({
+            url: `${baseUrl}?id=${id}`,
+            method: "DELETE",
+            success: function(responseText) {
+                setResponse(`Customer Deleted Successfully!\n\nResponse: ${responseText}`);
+                showNotification('Customer deleted successfully!');
+                $('#deleteId').val('');
+            },
+            error: function(xhr) {
+                const errorMsg = xhr.responseText || 'Failed to delete customer';
+                setResponse(`Error: ${errorMsg}`, true);
+                showNotification('Failed to delete customer', 'error');
+            },
+            complete: function() {
+                removeLoading('.btn-danger');
+            }
+        });
+    }
+
+    function getCustomer() {
+        const id = $('#searchId').val();
+
+        if (!id) {
+            showNotification('Please enter Customer ID to search', 'error');
+            return;
+        }
+
+        setLoading('.btn-secondary');
+
+        $.ajax({
+            url: `${baseUrl}?id=${id}`,
+            method: "GET",
+            success: function(responseText) {
+                setResponse(`Customer Details:\n\n${responseText}`);
+                showNotification('Customer retrieved successfully!');
+            },
+            error: function(xhr) {
+                const errorMsg = xhr.responseText || 'Customer not found';
+                setResponse(`Error: ${errorMsg}`, true);
+                showNotification('Customer not found', 'error');
+            },
+            complete: function() {
+                removeLoading('.btn-secondary');
+            }
+        });
+    }
+
+    function getAllCustomers() {
+        setLoading('.btn-primary');
+
+        $.ajax({
+            url: baseUrl,
+            method: "GET",
+            success: function(responseText) {
+                setResponse(`All Customers:\n\n${responseText}`);
+                showNotification('All customers retrieved successfully!');
+            },
+            error: function(xhr) {
+                const errorMsg = xhr.responseText || 'Failed to retrieve customers';
+                setResponse(`Error: ${errorMsg}`, true);
+                showNotification('Failed to retrieve customers', 'error');
+            },
+            complete: function() {
+                removeLoading('.btn-primary');
+            }
+        });
+    }
+
+    function clearForm() {
+        $('#id').val('');
+        $('#name').val('');
+        $('#address').val('');
+    }
+
+    // Enter key support
+    $(document).ready(function() {
+        $('input').keypress(function(e) {
+            if (e.which === 13) { // Enter key
+                $(this).closest('.card').find('.btn-primary').click();
+            }
+        });
+    });
+</script>
+</body>
+</html>

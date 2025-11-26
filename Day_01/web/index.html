@@ -1,0 +1,150 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>AJAX</title>
+    <style>
+        .post-card {
+            font-family: Arial, sans-serif;
+            max-width: 400px;
+            margin: 20px auto;
+            border: 1px solid #ddd;
+            border-radius: 8px;
+            box-shadow: 0 4px 12px rgba(0, 0, 0, 0.1);
+            background-color: #fff;
+            overflow: hidden;
+        }
+
+        .card-header {
+            background-color: #3f51b5;
+            color: white;
+            padding: 15px;
+            border-bottom: 1px solid #303f9f;
+        }
+
+        .user-id {
+            display: block;
+            font-size: 0.85em;
+            font-weight: bold;
+            margin-bottom: 5px;
+            opacity: 0.8;
+        }
+
+        .card-title {
+            margin: 0;
+            font-size: 1.25em;
+            line-height: 1.4;
+        }
+
+        .card-body {
+            padding: 15px;
+        }
+
+        .card-text {
+            margin: 0;
+            font-size: 1em;
+            color: #333;
+            white-space: pre-wrap; /* Important for handling the newline characters (\n) in the 'body' */
+        }
+
+        .card-footer {
+            padding: 10px 15px;
+            background-color: #f5f5f5;
+            border-top: 1px solid #eee;
+            text-align: right;
+        }
+
+        .post-id {
+            font-size: 0.8em;
+            color: #777;
+        }
+    </style>
+</head>
+<body>
+<button id="button1">GET</button>
+<button id="button2">POST</button>
+<button id="button3">DELETE</button>
+<button id="button4">PUT</button>
+<div id="card-wrapper"></div>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/jquery/3.7.1/jquery.min.js"></script>
+<script>
+    $("#button1").on("click", function () {
+        $.ajax({
+            url: "http://localhost:8080/Day_01_Web_exploded/customer",
+            method: "GET",
+            async: false,
+            success: function (responseText) {
+                $("#card-wrapper").html(responseText);
+                console.log(responseText);
+            },
+            error: function () {
+                console.log("Eya GET eka wada na");
+            },
+        });
+    });
+
+
+    $("#button2").on("click", function () {
+        $.ajax({
+            url: "http://localhost:8080/Day_01_Web_exploded/customer",
+            method: "POST",
+            async: false,
+            success: function (responseText) {
+                $("#card-wrapper").html(responseText);
+                console.log(responseText);
+            },
+            error: function () {
+                console.log("Eya POST eka wada na");
+            },
+        });
+
+
+    });$("#button3").on("click", function () {
+        $.ajax({
+            url: "http://localhost:8080/Day_01_Web_exploded/customer",
+            method: "DELETE",
+            async: false,
+            success: function (responseText) {
+                $("#card-wrapper").html(responseText);
+                console.log(responseText);
+            },
+            error: function () {
+                console.log("Eya DELETE eka wada na");
+            },
+        });
+
+
+    });$("#button4").on("click", function () {
+        $.ajax({
+            url: "http://localhost:8080/Day_01_Web_exploded/customer",
+            method: "PUT",
+            async: false,
+            success: function (responseText) {
+                $("#card-wrapper").html(responseText);
+                console.log(responseText);
+            },
+            error: function () {
+                console.log("Eya PUT eka wada na");
+            },
+        });
+    });
+    const getCard = function (posts) {
+        return `
+            <div class="post-card">
+    <div class="card-header">
+        <span class="user-id">User ID: <span id="userId">${posts.id}</span></span>
+        <h2 class="card-title" id="title">${posts.title}</h2>
+    </div>
+    <div class="card-body">
+        <p class="card-text" id="body">${posts.body}</p>
+    </div>
+    <div class="card-footer">
+        <span class="post-id">Post ID: <span id="id">${posts.id}</span></span>
+    </div>
+</div>
+        `;
+    };
+</script>
+</body>
+</html>
