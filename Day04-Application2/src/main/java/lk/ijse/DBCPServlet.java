@@ -1,5 +1,6 @@
 package lk.ijse;
 
+import jakarta.servlet.ServletContext;
 import jakarta.servlet.ServletException;
 import jakarta.servlet.annotation.WebServlet;
 import jakarta.servlet.http.HttpServlet;
@@ -15,13 +16,8 @@ public class DBCPServlet extends HttpServlet {
     BasicDataSource ds;
     @Override
     public void init() throws ServletException {
-        ds=new BasicDataSource();
-        ds.setDriverClassName("com.mysql.jdbc.Driver");
-        ds.setUrl("jdbc:mysql://localhost:3306/javaeeapp ");
-        ds.setUsername("root");
-        ds.setPassword("Shaluka020524");
-        ds.setInitialSize(5);
-        ds.setMaxTotal(5);
+        ServletContext sc = getServletContext();
+        ds = (BasicDataSource)sc.getAttribute("datasource");
     }
 
     @Override
@@ -56,7 +52,7 @@ public class DBCPServlet extends HttpServlet {
         String id = req.getParameter("id");
 
         try {
-            Connection connection= ds.getConnection();
+            Connection connection=ds.getConnection();
             if (id==null) {
                 String query="SELECT * FROM customer";
                 PreparedStatement preparedStatement=connection.prepareStatement(query);
@@ -113,9 +109,7 @@ public class DBCPServlet extends HttpServlet {
     protected void doDelete(HttpServletRequest req, HttpServletResponse resp) throws ServletException, IOException {
         String id = req.getParameter("id");
         try {
-            Class.forName("com.mysql.cj.jdbc.Driver");
-            Connection connection=DriverManager.getConnection("jdbc:mysql://localhost:3306/javaeeapp2",
-                    "root","12345678");
+            Connection connection=ds.getConnection();
             String query="delete from customer WHERE id=?";
             PreparedStatement preparedStatement=connection.prepareStatement(query);
             preparedStatement.setString(1,id);
@@ -125,8 +119,6 @@ public class DBCPServlet extends HttpServlet {
             }else {
                 resp.getWriter().println("Customer Saved Failed");
             }
-        } catch (ClassNotFoundException e) {
-            throw new RuntimeException(e);
         } catch (SQLException e) {
             throw new RuntimeException(e);
         }
